@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>VIP Access</title>
+
+        <style>
+            @font-face {
+                font-family: "MyCustomFont";
+                src: url("fonts/Montserrat-Bold.ttf") format("truetype");
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            /* --- RESET & VARIABLES --- */
+            :root {
+                --gold: #ffd700;
+                --gold-dim: #b8860b;
+                --dark-blue: #0f172a;
+                --glass-border: rgba(255, 215, 0, 0.3);
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "MyCustomFont", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* --- LAYOUT LOCK (Anti Geser) --- */
+            html {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            body {
+                width: 100%;
+                height: 100%;
+                position: fixed; /* Kunci Body */
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #000;
+            }
+
+            /* --- BACKGROUND CONTAINER (Agar Orb tidak melebar) --- */
+            .bg-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                z-index: 1;
+                pointer-events: none;
+            }
+
+            /* --- BACKGROUND ANIMATION (ORBS) --- */
+            .bg-orb {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(80px);
+                opacity: 0.6;
+                animation: floatOrb 10s infinite alternate;
+            }
+
+            .orb-1 {
+                width: 300px;
+                height: 300px;
+                background: #4338ca;
+                top: -50px;
+                left: -50px;
+            }
+            .orb-2 {
+                width: 400px;
+                height: 400px;
+                background: #be123c;
+                bottom: -100px;
+                right: -100px;
+                animation-delay: -5s;
+            }
+            .orb-3 {
+                width: 200px;
+                height: 200px;
+                background: var(--gold-dim);
+                top: 40%;
+                left: 60%;
+                opacity: 0.3;
+                animation-duration: 15s;
+            }
+
+            @keyframes floatOrb {
+                0% { transform: translate(0, 0); }
+                100% { transform: translate(30px, 50px); }
+            }
+
+            /* --- KARTU UTAMA (GLASS) --- */
+            .login-card {
+                position: relative;
+                z-index: 10;
+                width: 88%; /* Sedikit lebih kecil agar aman di HP */
+                max-width: 380px;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: 24px;
+                padding: 35px 25px;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+                text-align: center;
+                
+                /* Scroll Handling untuk layar pendek/landscape */
+                max-height: 90vh;
+                overflow-y: auto;
+                scrollbar-width: none;
+            }
+            .login-card::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Hiasan Kilau */
+            .login-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -50%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    to right,
+                    transparent,
+                    rgba(255, 255, 255, 0.1),
+                    transparent
+                );
+                transform: skewX(-25deg);
+                animation: shine 6s infinite;
+                pointer-events: none; /* Agar tidak menghalangi klik */
+            }
+
+            @keyframes shine {
+                0% { left: -100%; }
+                20% { left: 200%; }
+                100% { left: 200%; }
+            }
+
+            /* --- LOGO ANIMASI --- */
+            .wifi-logo {
+                width: 90px;
+                height: 70px;
+                margin: 0 auto 25px auto;
+                position: relative;
+            }
+            .wifi-circle {
+                position: absolute;
+                border: 4px solid transparent;
+                border-top-color: var(--gold);
+                border-radius: 50%;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -20%);
+                opacity: 0;
+                animation: signalPulse 2s infinite;
+            }
+            .c-small {
+                width: 15px; height: 15px; border-width: 4px;
+                animation-delay: 0s; border-color: var(--gold); background: var(--gold);
+            }
+            .c-mid { width: 65px; height: 65px; animation-delay: 0.4s; }
+            .c-large { width: 115px; height: 130px; animation-delay: 0.8s; }
+
+            @keyframes signalPulse {
+                0% { opacity: 0.2; transform: translate(-50%, -20%) scale(0.9); }
+                50% { opacity: 1; transform: translate(-50%, -20%) scale(1); }
+                100% { opacity: 0.2; transform: translate(-50%, -20%) scale(0.9); }
+            }
+
+            h2 {
+                color: white;
+                font-weight: 700;
+                font-size: 22px;
+                letter-spacing: 1px;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+                margin-bottom: 5px;
+            }
+            .sub-text {
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 12px;
+                margin-bottom: 20px;
+            }
+
+            /* --- TABS SWITCHER --- */
+            .switch-box {
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 50px;
+                padding: 4px;
+                display: flex;
+                margin-bottom: 20px;
+                position: relative;
+            }
+            .switch-btn {
+                flex: 1;
+                padding: 10px;
+                border: none;
+                background: transparent;
+                color: rgba(255, 255, 255, 0.6);
+                font-weight: 600;
+                font-size: 13px;
+                z-index: 2;
+                cursor: pointer;
+                transition: color 0.3s;
+            }
+            .switch-btn.active { color: var(--dark-blue); }
+            .switch-bg {
+                position: absolute;
+                top: 4px; left: 4px;
+                width: calc(50% - 4px);
+                height: calc(100% - 8px);
+                background: var(--gold);
+                border-radius: 40px;
+                transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+                z-index: 1;
+            }
+
+            /* --- INPUTS --- */
+            .input-wrapper {
+                position: relative;
+                margin-bottom: 15px;
+                text-align: left;
+            }
+            .input-icon {
+                position: absolute;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--gold);
+                font-size: 16px;
+            }
+            .custom-input {
+                width: 100%;
+                padding: 14px 14px 14px 40px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 12px;
+                color: white;
+                outline: none;
+                transition: all 0.3s;
+                font-size: 14px;
+            }
+            .custom-input:focus {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: var(--gold);
+            }
+            #field-password {
+                display: none;
+                animation: slideDown 0.3s ease;
+            }
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            /* --- BUTTON --- */
+            .btn-glow {
+                width: 100%;
+                padding: 14px;
+                margin-top: 10px;
+                border: none;
+                border-radius: 12px;
+                background: linear-gradient(45deg, #ffd700, #fdb931);
+                color: #222;
+                font-weight: 700;
+                font-size: 15px;
+                cursor: pointer;
+                box-shadow: 0 4px 25px rgba(255, 215, 0, 0.4);
+                transition: transform 0.2s;
+            }
+            .btn-glow:active { transform: scale(0.97); }
+
+            /* --- RUNNING TEXT --- */
+            .marquee-container {
+                margin-top: 20px;
+                font-size: 10px;
+                color: rgba(255, 255, 255, 0.7);
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 4px;
+                padding: 5px;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+            .marquee-content {
+                display: inline-block;
+                animation: marquee 10s linear infinite;
+            }
+            @keyframes marquee {
+                0% { transform: translateX(100%); }
+                100% { transform: translateX(-100%); }
+            }
+
+            /* --- ERROR BOX --- */
+            .error-notif {
+                margin-top: 15px;
+                background: rgba(255, 50, 50, 0.2);
+                border: 1px solid #ff4444;
+                color: #ffcccc;
+                font-size: 12px;
+                padding: 10px;
+                border-radius: 8px;
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="bg-container">
+            <div class="bg-orb orb-1"></div>
+            <div class="bg-orb orb-2"></div>
+            <div class="bg-orb orb-3"></div>
+        </div>
+
+        <div class="login-card">
+            <div class="wifi-logo">
+                <div class="wifi-circle c-large"></div>
+                <div class="wifi-circle c-mid"></div>
+                <div class="wifi-circle c-small"></div>
+            </div>
+            <h2>WELCOME</h2>
+            <p class="sub-text">Satu Langkah Menuju Online</p>
+
+            <div class="switch-box">
+                <div class="switch-bg" id="slider-bg"></div>
+                <button class="switch-btn active" onclick="setMode('voucher')">VOUCHER</button>
+                <button class="switch-btn" onclick="setMode('member')">MEMBER</button>
+            </div>
+
+            <form name="login" action="$(link-login-only)" method="post" onsubmit="return submitLogin()">
+                <input type="hidden" name="dst" value="$(link-orig)" />
+                <input type="hidden" name="popup" value="true" />
+
+                <div class="input-wrapper">
+                    <span class="input-icon">✦</span>
+                    <input
+                        type="text"
+                        name="username"
+                        id="user-in"
+                        class="custom-input"
+                        placeholder="Masukkan Kode Voucher"
+                        required
+                        autocomplete="off"
+                    />
+                </div>
+
+                <div class="input-wrapper" id="field-password">
+                    <span class="input-icon">🔒</span>
+                    <input
+                        type="password"
+                        name="password"
+                        id="pass-in"
+                        class="custom-input"
+                        placeholder="Kata Sandi"
+                    />
+                </div>
+
+                <button type="submit" class="btn-glow">CONNECT</button>
+                <div class="error-notif" id="err-box">
+                    $(if error)$(error)$(endif)
+                </div>
+            </form>
+
+            <div class="marquee-container">
+                <div class="marquee-content">
+                    Internet Lancar & Cepat • Gunakan dengan bijak • Hubungi admin jika ada kendala • Selamat Menikmati!
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            const slider = document.getElementById("slider-bg");
+            const userIn = document.getElementById("user-in");
+            const passIn = document.getElementById("pass-in");
+            const passField = document.getElementById("field-password");
+            const btns = document.querySelectorAll(".switch-btn");
+            let mode = "voucher";
+
+            function setMode(selectedMode) {
+                mode = selectedMode;
+                if (mode === "voucher") {
+                    slider.style.transform = "translateX(0%)";
+                    btns[0].classList.add("active");
+                    btns[1].classList.remove("active");
+                    userIn.placeholder = "Masukkan Kode Voucher";
+                    passField.style.display = "none";
+                    passIn.required = false;
+                    passIn.value = "";
+                } else {
+                    slider.style.transform = "translateX(100%)";
+                    btns[0].classList.remove("active");
+                    btns[1].classList.add("active");
+                    userIn.placeholder = "Username Member";
+                    passField.style.display = "block";
+                    passIn.required = true;
+                }
+            }
+            function submitLogin() {
+                if (mode === "voucher") {
+                    passIn.value = userIn.value;
+                }
+                return true;
+            }
+            window.onload = function () {
+                var eBox = document.getElementById("err-box");
+                if (eBox.innerHTML.includes("$(if error)")) {
+                    eBox.style.display = "none";
+                } else if (eBox.innerHTML.trim() !== "") {
+                    eBox.style.display = "block";
+                }
+                // Fokus otomatis di HP kadang mengganggu keyboard popup, jadi opsional
+                // userIn.focus(); 
+            };
+        </script>
+    </body>
+</html>

@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>Session Ended</title>
+
+        <style>
+            @font-face {
+                font-family: "MyCustomFont";
+                src: url("fonts/Montserrat-Bold.ttf") format("truetype");
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            :root {
+                --gold: #ffd700;
+                --gold-dim: #b8860b;
+                --text-gray: #aaa;
+                --glass-bg: rgba(255, 255, 255, 0.08);
+                --glass-border: rgba(255, 255, 255, 0.1);
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "MyCustomFont", sans-serif;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* --- LAYOUT LOCK --- */
+            html {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            body {
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #000;
+                color: white;
+            }
+
+            /* --- BACKGROUND CONTAINER --- */
+            .bg-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                z-index: 1;
+                pointer-events: none;
+            }
+
+            .orb {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(90px);
+                opacity: 0.5;
+                animation: floatOrb 12s infinite alternate ease-in-out;
+            }
+            .orb-1 {
+                width: 350px; height: 350px;
+                background: #4f46e5;
+                top: -10%; left: -10%;
+            }
+            .orb-2 {
+                width: 400px; height: 400px;
+                background: #be123c;
+                bottom: -10%; right: -10%;
+                animation-delay: -5s;
+            }
+            @keyframes floatOrb {
+                0% { transform: translate(0, 0); }
+                100% { transform: translate(40px, 40px); }
+            }
+
+            /* --- CARD --- */
+            .logout-card {
+                position: relative;
+                z-index: 10;
+                width: 88%;
+                max-width: 360px;
+                background: var(--glass-bg);
+                backdrop-filter: blur(25px);
+                -webkit-backdrop-filter: blur(25px);
+                border: 1px solid var(--glass-border);
+                border-radius: 24px;
+                padding: 35px 25px;
+                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+                text-align: center;
+                
+                max-height: 90vh;
+                overflow-y: auto;
+                scrollbar-width: none;
+                animation: popUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            }
+            .logout-card::-webkit-scrollbar { display: none; }
+
+            @keyframes popUp {
+                from { opacity: 0; transform: scale(0.9); }
+                to { opacity: 1; transform: scale(1); }
+            }
+
+            /* --- ICON --- */
+            .icon-wrapper {
+                width: 70px;
+                height: 70px;
+                margin: 0 auto 20px auto;
+                border-radius: 50%;
+                border: 2px dashed rgba(255, 255, 255, 0.2);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 30px;
+                color: var(--gold);
+                animation: spinSlow 10s linear infinite;
+            }
+            @keyframes spinSlow {
+                to { transform: rotate(360deg); }
+            }
+
+            h2 {
+                font-size: 20px;
+                font-weight: 700;
+                letter-spacing: 1px;
+                margin-bottom: 5px;
+                color: white;
+            }
+            .sub-text {
+                font-size: 12px;
+                color: var(--text-gray);
+                margin-bottom: 25px;
+            }
+
+            .user-badge {
+                display: inline-block;
+                background: rgba(255, 215, 0, 0.1);
+                color: var(--gold);
+                padding: 6px 16px;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                margin-bottom: 30px;
+                border: 1px solid rgba(255, 215, 0, 0.2);
+            }
+
+            /* --- SUMMARY GRID --- */
+            .summary-box {
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 16px;
+                padding: 15px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+                text-align: left;
+                margin-bottom: 25px;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+            .stat-item {
+                display: flex;
+                flex-direction: column;
+            }
+            .stat-label {
+                font-size: 10px;
+                color: #888;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
+            .stat-value {
+                font-size: 14px;
+                font-weight: 700;
+                color: white;
+            }
+            /* Garis pemisah vertikal di tengah grid */
+            .stat-item:first-child {
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .stat-item:last-child {
+                padding-left: 10px;
+            }
+
+            /* --- BUTTON --- */
+            .btn-login {
+                width: 100%;
+                padding: 14px;
+                border: none;
+                border-radius: 12px;
+                background: linear-gradient(45deg, #ffd700, #fdb931);
+                color: #111;
+                font-weight: 700;
+                font-size: 14px;
+                cursor: pointer;
+                box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+                transition: transform 0.2s;
+                text-decoration: none; /* Penting untuk tag <a> */
+                display: inline-block; /* Agar padding jalan di tag <a> */
+            }
+            .btn-login:active {
+                transform: scale(0.97);
+            }
+
+            .footer {
+                margin-top: 20px;
+                font-size: 10px;
+                color: rgba(255, 255, 255, 0.3);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="bg-container">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+        </div>
+
+        <div class="logout-card">
+            <div class="icon-wrapper">👋</div>
+            
+            <h2>SESI BERAKHIR</h2>
+            <p class="sub-text">Sampai jumpa di koneksi berikutnya</p>
+
+            <div class="user-badge" id="user-display">$(username)</div>
+
+            <div class="summary-box">
+                <div class="stat-item">
+                    <span class="stat-label">Total Durasi</span>
+                    <span class="stat-value" id="uptime-display">$(uptime)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Data Terpakai</span>
+                    <span class="stat-value" id="data-display">
+                        $(bytes-out-nice)
+                    </span>
+                </div>
+            </div>
+
+            <form action="$(link-login)" name="login" method="get">
+                <button type="submit" class="btn-login">LOGIN KEMBALI</button>
+            </form>
+
+            <div class="footer">
+                Voucher & Member System
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            window.onload = function() {
+                // --- LOGIC PREVIEW MODE ---
+                var userText = document.getElementById("user-display").innerText;
+                var isLocal = window.location.protocol === "file:" || window.location.hostname === "localhost";
+
+                // Jika dibuka di komputer (bukan Mikrotik) atau variabel Mikrotik tidak ter-render
+                if (isLocal || userText.includes("$(")) {
+                    console.log("Mode Preview Aktif");
+                    document.getElementById("user-display").innerText = "Sultan_VVIP_01";
+                    document.getElementById("uptime-display").innerText = "2j 15m";
+                    document.getElementById("data-display").innerText = "1.2 GiB";
+                }
+            };
+        </script>
+    </body>
+</html>

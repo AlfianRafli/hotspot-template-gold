@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="2; url=$(link-orig)" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>Success Redirect</title>
+
+        <style>
+            @font-face {
+                font-family: "MyCustomFont";
+                src: url("fonts/Montserrat-Bold.ttf") format("truetype");
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            :root {
+                --gold: #ffd700;
+                --success: #00ff88;
+                --glass-bg: rgba(255, 255, 255, 0.08);
+                --glass-border: rgba(255, 255, 255, 0.1);
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "MyCustomFont", sans-serif;
+            }
+
+            /* --- LAYOUT LOCK --- */
+            html {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            body {
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #000;
+                color: white;
+            }
+
+            /* --- BACKGROUND --- */
+            .bg-container {
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+                overflow: hidden;
+                z-index: 1;
+                pointer-events: none;
+            }
+
+            .orb {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(80px);
+                opacity: 0.6;
+                animation: pulseOrb 3s infinite alternate;
+            }
+            .orb-center {
+                width: 300px; height: 300px;
+                background: var(--gold);
+                opacity: 0.15;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            @keyframes pulseOrb {
+                0% { transform: translate(-50%, -50%) scale(1); opacity: 0.1; }
+                100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.2; }
+            }
+
+            /* --- CARD --- */
+            .redirect-card {
+                position: relative;
+                z-index: 10;
+                width: 85%;
+                max-width: 320px;
+                text-align: center;
+                animation: fadeIn 0.8s ease forwards;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            /* --- ANIMASI LOADER/SUKSES --- */
+            .loader-ring {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 25px auto;
+                border-radius: 50%;
+                border: 4px solid rgba(255, 215, 0, 0.1);
+                border-top-color: var(--gold);
+                animation: spin 1s linear infinite;
+                position: relative;
+            }
+            
+            /* Checkmark (Akan muncul lewat JS atau delay CSS jika mau) 
+               Disini kita pakai spinner saja agar user tahu sedang 'loading' ke tujuan */
+            
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+
+            h2 {
+                font-size: 22px;
+                color: var(--gold);
+                margin-bottom: 10px;
+                font-weight: 700;
+            }
+
+            p {
+                font-size: 13px;
+                color: #ccc;
+                margin-bottom: 30px;
+            }
+
+            .btn-manual {
+                background: transparent;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: #888;
+                padding: 10px 20px;
+                border-radius: 50px;
+                font-size: 11px;
+                text-decoration: none;
+                transition: 0.3s;
+            }
+            .btn-manual:hover {
+                border-color: var(--gold);
+                color: var(--gold);
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="bg-container">
+            <div class="orb orb-center"></div>
+        </div>
+
+        <div class="redirect-card">
+            <div class="loader-ring"></div>
+            
+            <h2>AKSES DITERIMA</h2>
+            <p>Membuka gerbang internet...</p>
+
+            <div style="margin-top: 40px;">
+                <a href="$(link-orig)" class="btn-manual">klik jika tidak beralih otomatis</a>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            // Script untuk redirect manual via JS sebagai backup meta tag
+            window.onload = function() {
+                var link = "$(link-orig)";
+                
+                // Logic untuk preview di laptop (Localhost)
+                if (link.includes("$(")) {
+                    link = "https://google.com"; // Dummy destination
+                    console.log("Mode Preview: Redirect ke Google dalam 2 detik");
+                }
+
+                setTimeout(function() {
+                    window.location.href = link;
+                }, 2000); // Waktu delay (2000ms = 2 detik)
+            };
+        </script>
+    </body>
+</html>

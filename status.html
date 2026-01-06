@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>Status Connection</title>
+
+        <style>
+            @font-face {
+                font-family: "MyCustomFont";
+                src: url("fonts/Montserrat-Bold.ttf") format("truetype");
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            :root {
+                --gold: #ffd700;
+                --success: #00ff88;
+                --danger: #ff4d4d;
+                --glass-bg: rgba(255, 255, 255, 0.08);
+                --glass-border: rgba(255, 255, 255, 0.1);
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "MyCustomFont", sans-serif;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* --- PERBAIKAN LAYOUT FIXED --- */
+            html {
+                width: 100%;
+                height: 100%;
+                overflow: hidden; /* Mencegah scroll di level root */
+            }
+
+            body {
+                width: 100%;
+                height: 100%;
+                position: fixed; /* Mengunci body agar tidak bisa digeser */
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #050505;
+                color: white;
+            }
+
+            /* --- BACKGROUND ORBS (Dibungkus agar aman) --- */
+            .bg-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                z-index: 1;
+                pointer-events: none; /* Agar tidak mengganggu klik */
+            }
+
+            .orb {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(90px);
+                opacity: 0.5;
+                animation: moveOrb 12s infinite alternate ease-in-out;
+            }
+            .orb-1 {
+                width: 350px;
+                height: 350px;
+                background: #4f46e5;
+                top: -10%;
+                left: -10%;
+            }
+            .orb-2 {
+                width: 400px;
+                height: 400px;
+                background: #be123c;
+                bottom: -10%;
+                right: -10%;
+                animation-delay: -5s;
+            }
+            @keyframes moveOrb {
+                0% {
+                    transform: translate(0, 0);
+                }
+                100% {
+                    transform: translate(40px, 40px);
+                }
+            }
+
+            /* --- CARD UTAMA --- */
+            .status-card {
+                position: relative;
+                z-index: 10;
+                width: 88%; /* Sedikit dikecilkan agar aman di HP kecil */
+                max-width: 360px;
+                background: var(--glass-bg);
+                backdrop-filter: blur(25px);
+                -webkit-backdrop-filter: blur(25px);
+                border: 1px solid var(--glass-border);
+                border-radius: 24px;
+                padding: 30px 25px;
+                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+                text-align: center;
+                /* Max height agar tidak nabrak di HP Landscape */
+                max-height: 90vh;
+                overflow-y: auto;
+                /* Sembunyikan scrollbar di dalam card */
+                scrollbar-width: none; 
+                animation: cardEntrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            }
+            .status-card::-webkit-scrollbar {
+                display: none;
+            }
+
+            @keyframes cardEntrance {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            /* --- ELEMEN GAYA --- */
+            .success-ring {
+                width: 60px;
+                height: 60px;
+                margin: 0 auto 10px auto;
+                border-radius: 50%;
+                border: 3px solid var(--success);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+                position: relative;
+            }
+            .success-ring::after {
+                content: "";
+                position: absolute;
+                top: -5px; left: -5px; right: -5px; bottom: -5px;
+                border-radius: 50%;
+                border: 2px solid transparent;
+                border-top-color: var(--success);
+                animation: spinRing 2s linear infinite;
+            }
+            .check-icon {
+                font-size: 30px;
+                color: var(--success);
+            }
+            @keyframes spinRing {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            h2 {
+                font-size: 18px;
+                font-weight: 700;
+                letter-spacing: 1px;
+                margin-bottom: 5px;
+            }
+            .user-badge {
+                display: inline-block;
+                background: rgba(255, 215, 0, 0.15);
+                color: var(--gold);
+                padding: 4px 12px;
+                border-radius: 50px;
+                font-size: 12px;
+                font-weight: 600;
+                margin-bottom: 15px;
+                border: 1px solid rgba(255, 215, 0, 0.3);
+            }
+
+            /* --- GRID INFO --- */
+            .grid-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin-bottom: 20px;
+                text-align: left;
+            }
+            .info-box {
+                background: rgba(0, 0, 0, 0.3);
+                padding: 10px;
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+            .info-label {
+                font-size: 9px;
+                color: #aaa;
+                text-transform: uppercase;
+                margin-bottom: 2px;
+            }
+            .info-value {
+                font-size: 12px;
+                font-weight: 700;
+                color: white;
+                word-wrap: break-word; /* Mencegah teks panjang merusak layout */
+            }
+
+            /* Full Width Box */
+            .full-width {
+                grid-column: span 2;
+                background: rgba(255, 215, 0, 0.05);
+                border-color: rgba(255, 215, 0, 0.1);
+                display: none;
+            }
+            .full-width .info-value { color: var(--gold); }
+
+            /* --- TOMBOL UTAMA --- */
+            .btn-logout {
+                width: 100%;
+                padding: 12px;
+                border: none;
+                border-radius: 10px;
+                background: linear-gradient(90deg, #ff4d4d, #c0392b);
+                color: white;
+                font-weight: 700;
+                font-size: 13px;
+                cursor: pointer;
+                box-shadow: 0 5px 20px rgba(255, 77, 77, 0.3);
+                transition: transform 0.2s;
+            }
+            .btn-logout:active { transform: scale(0.98); }
+
+            /* --- MODAL (PERBAIKAN POSISI) --- */
+            .modal-overlay {
+                position: fixed;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.85);
+                z-index: 9999;
+                display: none;
+                justify-content: center;
+                align-items: center;
+                backdrop-filter: blur(8px);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            .modal-overlay.show {
+                display: flex;
+                opacity: 1;
+            }
+            .modal-box {
+                background: #151515;
+                border: 1px solid var(--gold);
+                padding: 25px;
+                border-radius: 16px;
+                width: 80%;
+                max-width: 300px;
+                text-align: center;
+                box-shadow: 0 0 50px rgba(212, 175, 55, 0.15);
+                transform: scale(0.8);
+                transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            .modal-overlay.show .modal-box { transform: scale(1); }
+
+            .modal-title {
+                font-size: 16px;
+                color: var(--gold);
+                margin-bottom: 8px;
+                font-weight: bold;
+            }
+            .modal-desc {
+                font-size: 12px;
+                color: #ccc;
+                margin-bottom: 20px;
+                line-height: 1.4;
+            }
+            .modal-actions { display: flex; gap: 10px; }
+            .btn-modal {
+                flex: 1;
+                padding: 10px;
+                border-radius: 8px;
+                border: none;
+                font-weight: 600;
+                cursor: pointer;
+                font-size: 12px;
+            }
+            .btn-cancel { background: transparent; border: 1px solid #555; color: #ccc; }
+            .btn-confirm { background: var(--danger); color: white; box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3); }
+
+            /* Safe Zone Logic */
+            .safe-zone { display: none !important; }
+        </style>
+    </head>
+    <body>
+        <div class="bg-container">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+        </div>
+
+        <div class="status-card">
+            <div class="success-ring"><div class="check-icon">✓</div></div>
+            <h2>TERHUBUNG</h2>
+            <div class="user-badge" id="user-display">$(username)</div>
+
+            <div class="grid-container">
+                <div class="info-box">
+                    <div class="info-label">IP ADDRESS</div>
+                    <div class="info-value" id="ip-display">$(ip)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">DURASI</div>
+                    <div class="info-value" id="uptime-display">$(uptime)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">UPLOAD</div>
+                    <div class="info-value" id="ul-display">$(bytes-in-nice)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">DOWNLOAD</div>
+                    <div class="info-value" id="dl-display">$(bytes-out-nice)</div>
+                </div>
+
+                <div id="limit-quota-box" class="info-box full-width">
+                    <div class="info-label">SISA KUOTA</div>
+                    <div class="info-value" id="quota-display">$(remain-bytes-total-nice)</div>
+                </div>
+                <div id="limit-time-box" class="info-box full-width">
+                    <div class="info-label">SISA WAKTU</div>
+                    <div class="info-value" id="time-display">$(session-time-left)</div>
+                </div>
+            </div>
+
+            <button type="button" class="btn-logout" onclick="showModal()">
+                PUTUS KONEKSI
+            </button>
+
+            <form action="$(link-logout)" name="logout" id="logout-form" style="display: none">
+                <input type="hidden" name="erase-cookie" value="on" />
+            </form>
+        </div>
+
+        <div class="modal-overlay" id="custom-modal">
+            <div class="modal-box">
+                <div class="modal-title">Konfirmasi Logout</div>
+                <p class="modal-desc">
+                    Yakin ingin memutus koneksi internet dari perangkat ini?
+                </p>
+                <div class="modal-actions">
+                    <button class="btn-modal btn-cancel" onclick="closeModal()">Batal</button>
+                    <button class="btn-modal btn-confirm" onclick="confirmLogout()">Ya, Keluar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="safe-zone">
+            $(if refresh-timeout)<meta http-equiv="refresh" content="$(refresh-timeout-secs)" />$(endif)
+            <div id="mt-limit-check">$(if limit-bytes-total)true$(endif)</div>
+            <div id="mt-time-check">$(if session-time-left)true$(endif)</div>
+        </div>
+
+        <script type="text/javascript">
+            function showModal() {
+                var modal = document.getElementById("custom-modal");
+                modal.style.display = "flex";
+                // Delay sedikit agar transisi CSS jalan
+                setTimeout(function () {
+                    modal.classList.add("show");
+                }, 10);
+            }
+
+            function closeModal() {
+                var modal = document.getElementById("custom-modal");
+                modal.classList.remove("show");
+                setTimeout(function () {
+                    modal.style.display = "none";
+                }, 300);
+            }
+            function confirmLogout() {
+                document.getElementById("logout-form").submit();
+            }
+
+            window.onload = function () {
+                var isLocal = window.location.protocol === "file:" || window.location.hostname === "localhost";
+                var userText = document.getElementById("user-display").innerText;
+
+                if (isLocal || userText.includes("$(")) {
+                    // DUMMY DATA UNTUK PREVIEW
+                    document.getElementById("user-display").innerText = "Sultan_VVIP_01";
+                    document.getElementById("ip-display").innerText = "192.168.88.20";
+                    document.getElementById("uptime-display").innerText = "2j 15m 30d";
+                    document.getElementById("ul-display").innerText = "150.5 MiB";
+                    document.getElementById("dl-display").innerText = "1.2 GiB";
+                    
+                    document.getElementById("limit-quota-box").style.display = "block";
+                    document.getElementById("quota-display").innerText = "4.8 GiB / 5 GiB";
+                    document.getElementById("limit-time-box").style.display = "block";
+                    document.getElementById("time-display").innerText = "50 Menit";
+                } else {
+                    // MIKROTIK LOGIC
+                    var limitCheck = document.getElementById("mt-limit-check").innerText;
+                    var timeCheck = document.getElementById("mt-time-check").innerText;
+                    if (limitCheck.includes("true")) document.getElementById("limit-quota-box").style.display = "block";
+                    if (timeCheck.includes("true")) document.getElementById("limit-time-box").style.display = "block";
+                }
+            };
+        </script>
+    </body>
+</html>
